@@ -1,0 +1,70 @@
+PHONY  :=  __build 
+__build: 
+
+obj-y  := 
+
+subdir-y  := 
+include  Makefile 
+
+   
+#假设 obj-y = a/ b/ c/ d.o e.o f.o
+
+
+
+# 把文件夹（a/ b/ c/）提取为 （a b c）
+__subdir-y  :=  $(patsubst  %/,%,$(filter  %/,  $(obj-y))) 
+
+
+subdir-y  +=  $(__subdir-y) 
+
+   
+
+
+# 全部变为 a/built-in.o b/built-in.o c/built-in.o
+subdir_objs  :=  $(foreach  f,$(subdir-y),$(f)/built-in.o) 
+
+   
+
+
+#反向过滤 提取出 d.o e.o f.o 
+cur_objs  :=  $(filter-out  %/,  $(obj-y)) 
+
+#生成 .d.o.d  .e.o.d .f.o.d
+dep_files  :=  $(foreach  f,$(cur_objs),.$(f).d) 
+
+dep_files  :=  $(wildcard  $(dep_files)) 
+
+   
+#如果dep_files 存在的话 就包含进来 第一次编译是不存在的
+ifneq  ($(dep_files),) 
+
+    include  $(dep_files) 
+
+endif 
+
+   
+
+PHONY  +=  $(subdir-y) 
+
+   
+#默认执行这条规则
+__build  :  $(subdir-y)  built-in.o 
+
+   
+#在子目录下执行make 但是执行的是本文件 但本文件的include包含的子目录的makefile
+$(subdir-y):
+	@make  -C  $@  -f  $(TOPDIR)/Makefile.build 
+
+# 工作目录的 .o 和子目录下的built-in.o 生成工作目录下的 built-in.o
+built-in.o  :  $(cur_objs)  $(subdir_objs) 
+	@$(LD)  -r  -o  $@  $^ 
+	@echo  LD  $(subst $(TOPDIR),.,$(shell pwd))/$@
+
+#这里是延后展开 在使用dep_file时展开
+dep_file  =  .$@.d 
+
+%.o  :  %.c 
+	@$(CC)  $(CFLAGS)  -Wp,-MD,$(dep_file)  -c  -o  $@  $<
+	@echo  CC  $(subst $(TOPDIR),.,$(shell pwd))/$@
+
+.PHONY  :  $(PHONY) 
