@@ -63,3 +63,5 @@
 	fonts和display向text_display提供接口，完成小说页的构建。
 ##### text_ctrl：
 	text_display、text_stack、encoding为text_ctrl提供接口，完成对小说的各项操作。
+##### 层次图
+[![](https://raw.githubusercontent.com/xiaoapeng/show-file/master/res/%E5%B1%82%E6%AC%A1%E5%9B%BE.jpg)](https://raw.githubusercontent.com/xiaoapeng/show-file/master/res/%E5%B1%82%E6%AC%A1%E5%9B%BE.jpg)
