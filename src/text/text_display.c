@@ -557,12 +557,17 @@ int TextDisplayInit(void)
 		printf(MODULE_NAME": DisplayInit defeated\n");
 		return -1;
 	}
+
+
 	g_tScreenInfo = GetDispInfo("fb-dev");
 	if(g_tScreenInfo == NULL)
 	{		
 		printf(MODULE_NAME": GetDispInfo defeated\n");
 		return -1;
 	}
+	printf("dwXres,dwYres = %lu,%lu",g_tScreenInfo->dwXres,g_tScreenInfo->dwYres);
+	printf("dwWidth,dwHeight = %lu,%lu",g_tScreenInfo->dwWidth,g_tScreenInfo->dwHeight);
+	
 	error = FontsInit();
 	if(error)
 	{

@@ -48,5 +48,5 @@ distclean:
 	rm  -f  $(TARGET)
 
 install:
-	cp $(TATGET)  /home/plz/nfs/fs_linux_3.4.2/drv/
+	cp $(TARGET)  /home/plz/nfs/fs_linux_3.4.2/drv/
  
